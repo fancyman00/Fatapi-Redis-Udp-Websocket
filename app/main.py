@@ -1,10 +1,11 @@
-from fastapi import FastAPI
+import uvicorn
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from redis.asyncio import Redis
 
 from app.api.websocket import router as websocket_router
 from app.services.udp import UdpManager
-from app.services.websocket import get_redis_pool
-from app.services.websocket import manager
+from app.services.websocket import get_redis
 
 app = FastAPI()
 
@@ -25,6 +26,9 @@ app.include_router(websocket_router)
 
 
 @app.on_event("startup")
-async def startup_event():
-    await get_redis_pool()
-    UdpManager('192.168.41.28', 40004, manager.send_redis_message)
+async def startup_event(redis: Redis = Depends(get_redis)):
+    if not redis:
+        print('REDIS NOT WORKING')
+    # UdpManager('192.168.41.28', 40004, manager.send_redis_message)
+
+# uvicorn.run(app=app, port=8000)

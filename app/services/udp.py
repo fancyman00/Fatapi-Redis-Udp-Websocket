@@ -1,7 +1,6 @@
 import asyncio
 import socket
 import threading
-from app.services.websocket import manager
 
 
 class UdpManager:
