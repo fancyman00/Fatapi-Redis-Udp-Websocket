@@ -14,4 +14,4 @@ async def websocket_endpoint(websocket: WebSocket, redis: Redis = Depends(get_re
 
 @router.get('/test/{channel}')
 async def websocket_test(redis: Redis = Depends(get_redis), channel: str = '*'):
-    print(await redis.publish(channel, '123'))
+    await redis.publish(channel, '123')

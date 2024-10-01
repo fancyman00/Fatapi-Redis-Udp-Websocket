@@ -5,8 +5,9 @@ from pydantic import BaseModel, Json
 from app.schemas.telemetry import InfraredMatrix
 
 
-class WebsocketMessage(BaseModel):
-    event: list[str]
-    message: Json[Union[InfraredMatrix, None]] = None
+class Message(BaseModel):
+    channel: str
+    event: str
+    data: Union[InfraredMatrix, None] = None
 
 

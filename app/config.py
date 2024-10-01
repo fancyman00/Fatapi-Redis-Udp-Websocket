@@ -1,7 +1,6 @@
 import os
 
 from pydantic import computed_field, RedisDsn
-from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 DOTENV = os.path.join(os.path.dirname(__file__), ".env")

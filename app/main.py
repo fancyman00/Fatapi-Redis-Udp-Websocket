@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from redis.asyncio import Redis
 
 from app.api.websocket import router as websocket_router
-from app.services.udp import UdpManager
+from app.services.telemetry import create_telemetry_service_ir
 
 app = FastAPI()
 
@@ -24,5 +25,5 @@ app.include_router(websocket_router)
 
 @app.on_event("startup")
 async def startup_event():
-    UdpManager('192.168.41.28', 40004, 'udp-1')
-
+    ir_udp_1 = await create_telemetry_service_ir('192.168.41.28', 40004, channel='udp-1', event='ir1')
+    ir_udp_1.run()
