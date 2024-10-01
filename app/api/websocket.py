@@ -1,30 +1,17 @@
-import asyncio
-
 from fastapi import APIRouter, WebSocket, Depends
 from redis.asyncio import Redis
 
-from app.services.websocket import get_redis, listen_redis, listen_socket, channel
+from app.services.websocket import worker
+from app.services.redis import get_redis
 
 router = APIRouter()
 
 
-@router.websocket("/ws/{used_id}")
-async def websocket_endpoint(websocket: WebSocket, redis: Redis = Depends(get_redis), ):
-
-    await websocket.accept()
-
-    try:
-        await asyncio.gather(
-            listen_socket(websocket, redis),
-            listen_redis(websocket, redis)
-        )
-    except Exception as e:
-        print(f"Error in websocket_endpoint: {e}")
-    finally:
-        await redis.close()  # Закрываем соединение с Redis
-        print('Redis connection closed')
+@router.websocket("/ws/{channel}")
+async def websocket_endpoint(websocket: WebSocket, redis: Redis = Depends(get_redis), channel: str = '*'):
+    await worker(websocket, redis, channel)
 
 
-@router.get('/test/')
-async def websocket_test(redis: Redis = Depends(get_redis)):
+@router.get('/test/{channel}')
+async def websocket_test(redis: Redis = Depends(get_redis), channel: str = '*'):
     print(await redis.publish(channel, '123'))
