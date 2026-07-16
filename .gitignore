@@ -1,0 +1,21 @@
+# Env
+.env
+.env.*
+!.env.example
+app/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Runtime
+redisdata/
+*.log
